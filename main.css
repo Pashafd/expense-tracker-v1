@@ -60,7 +60,7 @@ h1 {
 .toggle button {
   border: none;
   border-radius: 600px;
-  background: #04458f;
+  background: #181c20;
   padding: 14px 20px;
   color: #ffffff;
   font-size: 30px;
@@ -134,6 +134,9 @@ input {
   font-size: 16px;
   font-weight: 400;
 }
+#clearLocal:active {
+  transform: scale(1.1);
+}
 #bug {
   font-size: 14px;
   background: none;
@@ -203,7 +206,7 @@ input {
 
 /* The Close Button */
 .close {
-  color: white;
+  color: rgb(194, 12, 12);
   float: right;
   font-size: 28px;
   font-weight: bold;

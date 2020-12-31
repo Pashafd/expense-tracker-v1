@@ -47,8 +47,8 @@ let expName = document.querySelector('#expName');
 let expNumber = document.querySelector('#expNumber');
 let id = 0;
 let details = [];
-let i = 0;
-let localId = 0;
+
+const clearLocalBtn = document.querySelector('#clearLocal');
 // //FUNCTION
 
 function getBudgetAmount (amount) {
@@ -95,9 +95,13 @@ function addExpenses (name, number) {
             name: name, 
             number: parseInt(number)
         };
+
         details.push(userExp);
         displayExp(details);
         id++;
+
+        localStorage.setItem("expense", JSON.stringify(details));
+        
         expName.value = "";
         expNumber.value = "";
     }
@@ -160,6 +164,17 @@ function getExpValue (editExpName, editExpNumber, id) {
     displayExp(details)
 }
 
+
+function getLocalExpenses() {
+    if(localStorage.getItem('expense')) {
+        details = JSON.parse(localStorage.getItem('expense'))
+        displayExp(details);
+        id = details.length; 
+    } else {
+        details = []
+    }
+}
+
 function delExpenseDetails (id) {
     let index = details.findIndex((item) => item.id === id);
     details.splice(index, 1);
@@ -168,37 +183,15 @@ function delExpenseDetails (id) {
 
     if(details.length == 0) {
         displayExpenses.style.display = "none";
-    }
-
-    //del from local Storage
-    if (!localStorage.getItem('key' !== null)) {
-        const curKey = localStorage.key(index);
-        localStorage.removeItem(curKey);
-    }
+    }    
 }
+
 
 function callBudget() {
     budgetform.style.display = "block";
     expensesForm.style.display = "none";
 }
 
-//LOCALSTORAGE
-
-function saveLocalExpense (expName, expNumber) {
-    const key = expName;
-    const value = expNumber;
-
-       const obj = {
-           id: localId,
-           name: key,
-           number: value
-    }
-
-    if (key && value) {
-        localStorage.setItem(`expense: ${id}`,JSON.stringify(obj));
-    }  
-
-}
 
 function saveBudget () {
     const key = "budget";
@@ -213,19 +206,15 @@ function getBudgetFromLocalStorage() {
 
 }
 
-function getExpenseFromLocalStorage () {
+function clearLocal () {
+    localStorage.clear();
+    details = [];
+    displayExp(details);
 
-    localId = localStorage.length;
-    console.log(localId);
-
-    for (let a = 0; a < localStorage.length; a++) {
-        const detailsLocal = localStorage.getItem(`expense: ${a}`).JSON.stringify;
-        
-    }
-    
+    if(details.length == 0) {
+        displayExpenses.style.display = "none";
+    }    
 }
-
-// getExpenseFromLocalStoraxge();
 
 //EVENTS
 
@@ -237,7 +226,6 @@ addForm.addEventListener("submit", (e) => {
 
 expForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    saveLocalExpense(expName.value, expNumber.value);
     addExpenses(expName.value, expNumber.value);
 });
 
@@ -247,6 +235,10 @@ saveEdit.addEventListener("submit", (e) => {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
-    getExpenseFromLocalStorage();
     getBudgetFromLocalStorage();
+    getLocalExpenses();
+});
+
+clearLocalBtn.addEventListener('click', () => {
+    clearLocal();
 });
